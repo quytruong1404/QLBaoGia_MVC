@@ -1,4 +1,4 @@
-📊 CRM PRO - Hệ thống Quản lý Báo giá
+📊 CRM - Hệ thống Quản lý Báo giá
 Dự án thực tập: Xây dựng mô đun Quản lý Báo giá (Quotes)
 🚀 Giới thiệu
 Dự án tập trung vào việc số hóa quy trình lập báo giá, giúp bộ phận Sales quản lý các giao dịch với khách hàng tiềm năng một cách chuyên nghiệp và chính xác.
