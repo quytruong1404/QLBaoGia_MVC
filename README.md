@@ -15,7 +15,7 @@ Server: Apache Tomcat 9.0.
 IDE: Eclipse (Dynamic Web Project).
 
 ✨ Tính năng chính
-Xem danh sách: Hiển thị báo giá với thông tin chi tiết (JOIN từ bảng Leads).
+Xem danh sách: Hiển thị báo giá với thông tin chi tiết.
 
 Thêm mới: Form tạo báo giá với các trường: Số BG, Lead ID, Ngày lập, Hiệu lực....
 
