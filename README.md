@@ -14,8 +14,7 @@ Server: Apache Tomcat 9.0.
 
 IDE: Eclipse (Dynamic Web Project).
 
-✨ Tính năng chính (Epic 5)
-Task 5.1: CRUD thông tin Báo giá cơ bản
+✨ Tính năng chính
 Xem danh sách: Hiển thị báo giá với thông tin chi tiết (JOIN từ bảng Leads).
 
 Thêm mới: Form tạo báo giá với các trường: Số BG, Lead ID, Ngày lập, Hiệu lực....
