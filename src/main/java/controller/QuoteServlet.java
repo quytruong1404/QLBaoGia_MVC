@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dao.QuoteDAO;
+import dao.QuoteDetailDAO;
 import model.Quote;
+import model.QuoteDetail;
 
 @WebServlet("/quotes")
 public class QuoteServlet extends HttpServlet {
@@ -30,6 +32,8 @@ public class QuoteServlet extends HttpServlet {
                 case "delete": deleteQuote(request, response); break;
                 case "edit": showEditForm(request, response); break;
                 case "update": updateQuote(request, response); break;
+                case "changeStage": changeStage(request, response); break;
+                case "view": viewQuoteDetail(request, response); break;
                 default: listQuotes(request, response); break;
             }
         } catch (SQLException ex) { throw new ServletException(ex); }
@@ -109,5 +113,38 @@ public class QuoteServlet extends HttpServlet {
         Quote quote = new Quote(id, qNumber, leadId, null, qDate, vUntil, status, stage, 0.0);
         quoteDAO.updateQuote(quote);
         response.sendRedirect("quotes?action=list");
+    }
+    private void changeStage(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+        // 1. Lấy thông tin từ request
+        int id = Integer.parseInt(request.getParameter("id"));
+        String nextStage = request.getParameter("stage");
+
+        // 2. Gọi DAO để cập nhật riêng trường stage
+        // Lưu ý: Bạn cần đảm bảo đã viết hàm updateQuoteStage trong QuoteDAO như mình hướng dẫn trước đó
+        boolean success = quoteDAO.updateQuoteStage(id, nextStage);
+
+        if (success) {
+            // 3. Nếu thành công, quay về danh sách
+            response.sendRedirect("quotes?action=list");
+        } else {
+            // Có thể bổ sung thông báo lỗi nếu cần
+            response.sendRedirect("quotes?action=list&error=true");
+        }
+    }
+    private void viewQuoteDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        // 1. Lấy thông tin chung của báo giá (Bao gồm Thuế, Chiết khấu...)
+        Quote quote = quoteDAO.getQuoteById(id); 
+
+        // 2. Lấy danh sách sản phẩm chi tiết của báo giá đó
+        QuoteDetailDAO quoteDetailDAO = new QuoteDetailDAO();
+        List<QuoteDetail> details = quoteDetailDAO.getDetailsByQuoteId(id);
+
+        request.setAttribute("quote", quote);
+        request.setAttribute("quoteDetails", details);
+
+        // 3. Chuyển hướng sang trang hiển thị form chi tiết
+        request.getRequestDispatcher("views/quote-view.jsp").forward(request, response);
     }
 }

@@ -12,6 +12,9 @@ public class Quote {
     private String stage;
     private double grandTotal;
     private String customerName;
+    private double totalAmount;    // Tổng tiền hàng trước thuế 
+    private double taxAmount;      // Tổng tiền thuế 
+    private double discountAmount; // Tổng tiền chiết khấu 
 
     public Quote() {}
 
@@ -38,6 +41,30 @@ public class Quote {
         this.approvalStatus = approvalStatus;
         this.stage = stage;
     }
+
+	public double getTotalAmount() {
+		return totalAmount;
+	}
+
+	public void setTotalAmount(double totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+	public double getTaxAmount() {
+		return taxAmount;
+	}
+
+	public void setTaxAmount(double taxAmount) {
+		this.taxAmount = taxAmount;
+	}
+
+	public double getDiscountAmount() {
+		return discountAmount;
+	}
+
+	public void setDiscountAmount(double discountAmount) {
+		this.discountAmount = discountAmount;
+	}
 
 	public int getId() {
 		return id;

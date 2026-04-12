@@ -64,33 +64,31 @@ public class QuoteDAO {
     }
 
     public Quote getQuoteById(int id) {
-        // Phải JOIN với bảng leads để lấy FullName
+        Quote quote = null;
+        // Lấy đầy đủ các trường tài chính
         String sql = "SELECT q.*, l.FullName FROM crm_quotes q " +
                      "JOIN leads l ON q.lead_id = l.LeadID WHERE q.id = ?";
-        
-        try (Connection conn = DBConnection.getConnection(); 
+        try (Connection conn = util.DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            
             if (rs.next()) {
-                // ĐẢM BẢO truyền đủ 9 tham số theo đúng thứ tự constructor mới
-                return new Quote(
-                    rs.getInt("id"),
-                    rs.getString("quote_number"),
-                    rs.getInt("lead_id"),
-                    rs.getString("FullName"), // <--- Tên khách hàng lấy từ bảng leads
-                    rs.getDate("quote_date"),
-                    rs.getDate("valid_until"),
-                    rs.getString("approval_status"),
-                    rs.getString("stage"),
-                    rs.getDouble("grand_total")
-                );
+                quote = new Quote();
+                quote.setId(rs.getInt("id"));
+                quote.setQuoteNumber(rs.getString("quote_number"));
+                quote.setCustomerName(rs.getString("FullName"));
+                quote.setQuoteDate(rs.getDate("quote_date"));
+                quote.setValidUntil(rs.getDate("valid_until"));
+                quote.setStage(rs.getString("stage"));
+                
+                // BỔ SUNG: Ánh xạ chính xác các trường tài chính từ DB
+                quote.setTotalAmount(rs.getDouble("total_amount"));
+                quote.setDiscountAmount(rs.getDouble("discount_amount"));
+                quote.setTaxAmount(rs.getDouble("tax_amount"));
+                quote.setGrandTotal(rs.getDouble("grand_total"));
             }
-        } catch (SQLException e) {
-            e.printStackTrace(); // Xem lỗi chi tiết ở Console của Eclipse
-        }
-        return null;
+        } catch (SQLException e) { e.printStackTrace(); }
+        return quote;
     }
 
     public void updateQuote(Quote q) throws SQLException {
@@ -119,4 +117,14 @@ public class QuoteDAO {
         } catch (SQLException e) { e.printStackTrace(); }
         return exists;
     }
+    public boolean updateQuoteStage(int id, String newStage) throws SQLException {
+        String sql = "UPDATE crm_quotes SET stage = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newStage);
+            ps.setInt(2, id);
+            return ps.executeUpdate() > 0;
+        }
+    }
+    
 }
